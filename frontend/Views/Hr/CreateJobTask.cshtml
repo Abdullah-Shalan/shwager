@@ -1,0 +1,35 @@
+@using frontend.Models.Requests
+@model JobTaskDto
+@{
+    ViewData["Title"] = "Create Task";
+    var jobId = ViewBag.JobId;
+}
+
+<h2>Create Task for Job @jobId</h2>
+
+<form asp-action="CreateJobTask" method="post">
+    <input type="hidden" name="jobId" value="@jobId" />
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <input asp-for="Description" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="RequiresFile" class="form-check-input" />
+        <label asp-for="RequiresFile" class="form-check-label"></label>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="RequiresVerification" class="form-check-input" />
+        <label asp-for="RequiresVerification" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Task</button>
+    <a asp-action="JobDetails" asp-route-id="@jobId" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

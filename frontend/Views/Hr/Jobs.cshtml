@@ -1,0 +1,32 @@
+@using frontend.Models.Requests
+@model List<JobSummaryDto>
+@{
+    ViewData["Title"] = "Jobs";
+}
+
+<h2>Jobs</h2>
+<a class="btn btn-primary mb-2" asp-action="CreateJob">Create New Job</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var job in Model)
+        {
+            <tr>
+                <td>@job.Title</td>
+                <td>@job.Description</td>
+                <td>
+                    <a class="btn btn-sm btn-info" asp-action="JobDetails" asp-route-id="@job.Id">Details</a>
+                    <a class="btn btn-sm btn-warning" asp-action="EditJob" asp-route-id="@job.Id">Edit</a>
+                    <a class="btn btn-sm btn-danger" asp-action="DeleteJob" asp-route-id="@job.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -103,6 +103,20 @@ public class HrService : IHrService
         return true;
     }
 
+    public async Task<ResumeFileDto?> DownloadResume(int candidateId)
+    {
+        var candidate = await _unitOfWork.Candidates.GetFirstOrDefaultAsync(c => c.Id == candidateId);
+        if (candidate?.ResumeData == null)
+            return null;
+
+        return new ResumeFileDto
+        {
+            Data = candidate.ResumeData,
+            FileName = candidate.ResumeFileName ?? "resume.pdf",
+            ContentType = "application/octet-stream"
+        };
+    }
+
     public async Task<bool> EditJobAsync(int jobId, JobDto jobDto)
     {
         var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == jobId);
@@ -149,7 +163,6 @@ public class HrService : IHrService
                     Email = candidate.Email,
                     FirstName = candidate.FirstName,
                     LastName = candidate.LastName,
-                    ResumeUrl = candidate.ResumeUrl,
                     AssignedJobTitle = candidate.Job?.Title ?? "None"
                 });
             }
@@ -200,7 +213,6 @@ public class HrService : IHrService
             Email = candidate.Email,
             FirstName = candidate.FirstName,
             LastName = candidate.LastName,
-            ResumeUrl = candidate.ResumeUrl,
             AssignedJobTitle = AssignedJobTitle
         };
 

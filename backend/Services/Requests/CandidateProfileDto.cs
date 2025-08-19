@@ -11,8 +11,6 @@ public class CandidateProfileDto
 
     public string LastName { get; set; } = string.Empty;
 
-    public string ResumeUrl { get; set; } = string.Empty;
-
     public string AssignedJobTitle { get; set; } = string.Empty;
 
 }

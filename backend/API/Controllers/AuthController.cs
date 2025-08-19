@@ -40,8 +40,7 @@ namespace Final_Project.API.Controllers
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email,
-                ResumeUrl = user.ResumeUrl
+                Email = user.Email
             };
 
             return Ok(response);

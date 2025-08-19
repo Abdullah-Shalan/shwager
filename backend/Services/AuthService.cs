@@ -69,7 +69,6 @@ public class AuthService : IAuthService
         candidate.PasswordHash = hashedPassword;
         candidate.FirstName = request.FirstName;
         candidate.LastName = request.LastName;
-        candidate.ResumeUrl = request.ResumeUrl;
 
         await _unitOfWork.Candidates.InsertAsync(candidate);
         await _unitOfWork.SaveAsync();

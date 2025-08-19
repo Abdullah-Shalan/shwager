@@ -199,35 +199,17 @@ public class CandidateService : ICandidateService
         if (resume == null || resume.Length == 0)
             return false;
 
-        // Define storage folder
-        var folderPath = Path.Combine("Uploads", "Resumes", candidateId.ToString());
+        using var memoryStream = new MemoryStream();
+        await resume.CopyToAsync(memoryStream);
 
-        // Ensure folder exists
-        Directory.CreateDirectory(folderPath);
+        var candidate = await _unitOfWork.Candidates.GetFirstOrDefaultAsync(c => c.Id == candidateId);
+        if (candidate == null) return false;
 
-        // Create unique file name to avoid overwriting
-        var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(resume.FileName)}";
-        var filePath = Path.Combine(folderPath, uniqueFileName);
+        candidate.ResumeData = memoryStream.ToArray();
+        candidate.ResumeFileName = resume.FileName;
 
-        // Save file
-        using (var stream = new FileStream(filePath, FileMode.Create))
-        {
-            await resume.CopyToAsync(stream);
-        }
-
-        // Store relative path or full URL in DB
-        var resumeUrl = Path.Combine("Resumes", candidateId.ToString(), uniqueFileName)
-                            .Replace("\\", "/"); // make web-friendly
-
-        // Update candidate
-        var candidate = await _unitOfWork.Candidates.GetFirstOrDefaultAsync(
-                        c => c.Id == candidateId);
-        if (candidate != null)
-        {
-            candidate.ResumeUrl = resumeUrl;
-            await _unitOfWork.Candidates.UpdateAsync(candidate);
-            await _unitOfWork.SaveAsync();
-        }
+        await _unitOfWork.Candidates.UpdateAsync(candidate);
+        await _unitOfWork.SaveAsync();
 
         return true;
     }
@@ -243,8 +225,21 @@ public class CandidateService : ICandidateService
             Id = candidate.Id,
             FirstName = candidate.FirstName,
             LastName = candidate.LastName,
-            Email = candidate.Email,
-            ResumeUrl = candidate.ResumeUrl
+            Email = candidate.Email
+        };
+    }
+
+    public async Task<ResumeFileDto?> DownloadResume(int candidateId)
+    {
+        var candidate = await _unitOfWork.Candidates.GetFirstOrDefaultAsync(c => c.Id == candidateId);
+        if (candidate?.ResumeData == null)
+            return null;
+
+        return new ResumeFileDto
+        {
+            Data = candidate.ResumeData,
+            FileName = candidate.ResumeFileName ?? "resume.pdf",
+            ContentType = "application/octet-stream"
         };
     }
 }

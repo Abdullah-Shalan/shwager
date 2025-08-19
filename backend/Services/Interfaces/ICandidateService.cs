@@ -19,4 +19,6 @@ public interface ICandidateService
     Task<CandidateProfileDto?> GetCandidateProfile(int candidateId);
     Task<bool> EditProfileInfoAsync(int candidateId, CandidateDto candidateDto);
     Task<bool> UploadResume(int candidateId, IFormFile resume);
+    Task<ResumeFileDto?> DownloadResume(int candidateId);
+
 }

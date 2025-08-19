@@ -25,6 +25,7 @@ public interface IHrService
 
     // Candidate Management
     Task<IEnumerable<CandidateProfileDto>?> GetAllCandidatesAsync();
+    Task<ResumeFileDto?> DownloadResume(int candidateId);
     Task<CandidateProfileDto?> GetCandidateProfileAsync(int candidateId);
     Task<IEnumerable<CandidateTaskDto>?> GetCandidateTaskProgressAsync(int candidateId);
     Task<bool> VerifyCompletedTaskAsync(int candidateTaskId);

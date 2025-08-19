@@ -17,7 +17,8 @@ namespace Final_Project.Entities
         [Required]
         public string LastName { get; set; } = string.Empty;
 
-        public string ResumeUrl { get; set; } = string.Empty;
+        public byte[]? ResumeData { get; set; }
+        public string ResumeFileName { get; set; } = string.Empty;
 
         public int? JobId { get; set; }
         public Job? Job { get; set; }

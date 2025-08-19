@@ -167,6 +167,14 @@ public class HrController : ControllerBase
         return Ok(profile);
     }
 
+    [HttpGet("candidates/{candidateId}/resume")]
+    public async Task<ActionResult> DownloadResume(int candidateId)
+    {
+        var resume = await _service.DownloadResume(candidateId);
+        if (resume == null) return NotFound();
+        return File(resume.Data, resume.ContentType, resume.FileName);
+    }
+
     [HttpGet("candidates/{candidateId}/tasks")]
     public async Task<ActionResult<IEnumerable<CandidateTaskDto>>> GetCandidateTaskProgress(int candidateId)
     {

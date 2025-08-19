@@ -8,5 +8,4 @@ public class CandidateRegisterResponse
 
     public string Email { get; set; } = string.Empty; 
 
-    public string ResumeUrl { get; set; } = string.Empty;
 }

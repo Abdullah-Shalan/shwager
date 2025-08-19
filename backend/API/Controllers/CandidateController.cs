@@ -95,6 +95,15 @@ public class CandidateController : ControllerBase
         return result ? Ok("Resume uploaded successfully") : BadRequest("Resume upload failed.");
     }
 
+    [HttpGet("resume")]
+    public async Task<ActionResult> DownloadResume()
+    {
+        var candidateId = GetCandidateIdFromClaims();
+        var resume = await _service.DownloadResume(candidateId);
+        if (resume == null) return NotFound();
+        return File(resume.Data, resume.ContentType, resume.FileName);
+    }
+
     private int GetCandidateIdFromClaims()
     {
         var claim = User.FindFirst(ClaimTypes.NameIdentifier);

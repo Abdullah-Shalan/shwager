@@ -1,0 +1,70 @@
+@using frontend.Models.Requests
+@model JobSummaryDto
+@{
+    ViewData["Title"] = "Assigned Job";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-primary">You Are Assigned To This Job</h2>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title">@Model.Title</h4>
+            <p class="card-text text-muted">@Model.Description</p>
+        </div>
+    </div>
+
+    @if (Model.JobTasks != null && Model.JobTasks.Any())
+    {
+        <h5 class="mb-3">Tasks</h5>
+        <div class="row g-3">
+            @foreach (var t in Model.JobTasks.OrderBy(t => t.TaskOrder))
+            {
+                <div class="col-md-6">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h6 class="card-title">Task @t.TaskOrder</h6>
+                            <p class="card-text">@t.Description</p>
+
+                            <p class="mb-1">
+                                <strong>Requires File:</strong>
+                                @if (t.RequiresFile)
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle-fill"></i> Yes
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-x-circle-fill"></i> No
+                                    </span>
+                                }
+                            </p>
+
+                            <p class="mb-0">
+                                <strong>Requires Verification:</strong>
+                                @if (t.RequiresVerification)
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-exclamation-triangle-fill"></i> Yes
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-x-circle-fill"></i> No
+                                    </span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">No tasks assigned yet.</p>
+    }
+</div>

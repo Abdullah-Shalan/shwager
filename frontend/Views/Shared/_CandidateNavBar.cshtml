@@ -1,0 +1,62 @@
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using System.Security.Claims
+@using frontend.Models
+
+@{
+    ViewBag.candidateName = JwtHelper.GetClaimValue(HttpContextAccessor.HttpContext?.Session.GetString("JWToken") ?? "",
+    ClaimTypes.Name);
+}
+
+<div class="container-fluid">
+    <a class="navbar-brand fw-bold" asp-controller="Candidate" asp-action="ViewProfile">
+        Welcome, @ViewBag.candidateName
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#candidateNavbar"
+        aria-controls="candidateNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+        <ul class="navbar-nav flex-grow-1">
+            <!-- Jobs -->
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Candidate" asp-action="Index">Available
+                    Jobs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Candidate" asp-action="AssignedJob">Assigned Job</a>
+            </li>
+
+            <!-- Tasks -->
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Candidate" asp-action="TaskProgress">Tasks Progress</a>
+            </li>
+
+
+            <!-- Profile -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-dark" href="#" id="profileDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Profile
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                    <li>
+                        <a class="dropdown-item" asp-controller="Candidate" asp-action="ViewProfile">
+                            View Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" asp-controller="Candidate" asp-action="EditProfile">
+                            Edit Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" asp-controller="Candidate" asp-action="UploadResume">
+                            Upload Resume
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

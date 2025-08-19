@@ -1,0 +1,26 @@
+@using frontend.Models.Requests
+@model CandidateProfileDto
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Candidate Profile</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">@Model.FirstName @Model.LastName</h5>
+            <h6 class="card-subtitle mb-2 text-muted">@Model.Email</h6>
+            <p class="card-text"><strong>Assigned Job:</strong> @Model.AssignedJobTitle</p>
+
+            @if (!string.IsNullOrEmpty(Model.ResumeUrl))
+            {
+                <p class="card-text">
+                    <strong>Resume:</strong>
+                    <a href="@Model.ResumeUrl" target="_blank" class="btn btn-sm btn-outline-primary">View Resume</a>
+                </p>
+            }
+        </div>
+    </div>
+</div>

@@ -5,6 +5,14 @@
     ViewData["Title"] = "My Profile";
 }
 
+<!-- Display errors as a Bootstrap alert -->
+@if (TempData["UploadMessage"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["UploadMessage"]
+    </div>
+}
+
 <div class="container mt-4">
     <h2 class="mb-4">Candidate Profile</h2>
 
@@ -21,6 +29,28 @@
                     <a href="@Model.ResumeUrl" target="_blank" class="btn btn-sm btn-outline-primary">View Resume</a>
                 </p>
             }
+
+            <div class="card p-3 mb-3">
+                <h5 class="card-title">Manage Resume</h5>
+                <p class="card-text">Upload a new resume or download your current one.</p>
+
+                <form asp-action="UploadResume" method="post" enctype="multipart/form-data"
+                    class="d-flex align-items-center mb-2">
+                    <input type="file" name="resume" class="form-control me-2" required />
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </form>
+
+                <a class="btn btn-success" asp-action="DownloadResume">
+                    <i class="bi bi-download"></i> Download Resume
+                </a>
+
+                @if (TempData["UploadMessage"] != null)
+                {
+                    <div class="alert alert-info mt-2" role="alert">
+                        @TempData["UploadMessage"]
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>

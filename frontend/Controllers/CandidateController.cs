@@ -16,7 +16,12 @@ public class CandidateController : Controller
         _clientFactory = clientFactory;
     }
 
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
+    {
+        return RedirectToAction("Index", "Home");
+    }
+
+    public async Task<IActionResult> Jobs()
     {
         var client = _clientFactory.CreateClient("ApiClient");
         var response = await client.GetFromJsonAsync<List<JobSummaryDto>>("/api/candidate/available-jobs");
@@ -26,9 +31,14 @@ public class CandidateController : Controller
     public async Task<IActionResult> AssignedJob()
     {
         var client = _clientFactory.CreateClient("ApiClient");
-        var response = await client.GetFromJsonAsync<JobSummaryDto>("/api/candidate/assigned-job");
-        return View(response ?? new JobSummaryDto());
+        var jobResponse = await client.GetAsync("/api/candidate/assigned-job");
 
+        if (jobResponse.IsSuccessStatusCode)
+        {
+            var jobSummary = await jobResponse.Content.ReadFromJsonAsync<JobSummaryDto>();
+            return View(jobSummary);
+        }
+        return View(new JobSummaryDto { });
     }
 
     public async Task<IActionResult> Assign(int jobId)
@@ -48,8 +58,13 @@ public class CandidateController : Controller
         var client = _clientFactory.CreateClient("ApiClient");
         var response = await client.GetFromJsonAsync<List<CandidateTaskDto>>($"/api/candidate/tasks");
 
-        var job = await client.GetFromJsonAsync<JobSummaryDto>("/api/candidate/assigned-job");
-        ViewBag.JobTitle = job?.Title;
+        var jobResponse = await client.GetAsync("/api/candidate/assigned-job");
+        if (jobResponse.IsSuccessStatusCode)
+        {
+            var job = await jobResponse.Content.ReadFromJsonAsync<JobSummaryDto>();
+            ViewBag.JobTitle = job != null ? job.Title : "";
+        }
+
         return View(response ?? []);
     }
 
@@ -69,11 +84,25 @@ public class CandidateController : Controller
     public async Task<IActionResult> ViewProfile()
     {
         var client = _clientFactory.CreateClient("ApiClient");
-        var response = await client.GetFromJsonAsync<CandidateProfileDto>($"/api/candidate/view-profile");
+        // Get candidate profile
+        var profile = await client.GetFromJsonAsync<CandidateProfileDto>("/api/candidate/view-profile");
 
-        var job = await client.GetFromJsonAsync<JobSummaryDto>("/api/candidate/assigned-job");
-        if (response != null) response.AssignedJobTitle = job?.Title ?? "";
-        return View(response);
+        // Initialize assigned job title as empty
+        string assignedJobTitle = "";
+
+        // Get assigned job safely
+        var jobResponse = await client.GetAsync("/api/candidate/assigned-job");
+        if (jobResponse.IsSuccessStatusCode)
+        {
+            var job = await jobResponse.Content.ReadFromJsonAsync<JobSummaryDto>();
+            if (job != null)
+                assignedJobTitle = job.Title;
+        }
+
+        if (profile != null)
+            profile.AssignedJobTitle = assignedJobTitle;
+
+        return View(profile);
     }
 
     [HttpGet]

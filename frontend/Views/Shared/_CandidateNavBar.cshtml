@@ -9,7 +9,7 @@
 
 <div class="container-fluid">
     <a class="navbar-brand fw-bold" asp-controller="Candidate" asp-action="ViewProfile">
-        Welcome, @ViewBag.candidateName
+        @ViewBag.candidateName
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#candidateNavbar"
         aria-controls="candidateNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,7 +20,7 @@
         <ul class="navbar-nav flex-grow-1">
             <!-- Jobs -->
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-controller="Candidate" asp-action="Index">Available
+                <a class="nav-link text-dark" asp-controller="Candidate" asp-action="Jobs">Available
                     Jobs</a>
             </li>
             <li class="nav-item">

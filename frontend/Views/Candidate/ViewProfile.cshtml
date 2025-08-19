@@ -5,14 +5,6 @@
     ViewData["Title"] = "My Profile";
 }
 
-<!-- Display errors as a Bootstrap alert -->
-@if (TempData["UploadMessage"] != null)
-{
-    <div class="alert alert-warning">
-        @TempData["UploadMessage"]
-    </div>
-}
-
 <div class="container mt-4">
     <h2 class="mb-4">Candidate Profile</h2>
 

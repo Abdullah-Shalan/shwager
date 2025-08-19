@@ -7,15 +7,24 @@ namespace frontend.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(IHttpContextAccessor httpContextAccessor)
     {
-        _logger = logger;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public IActionResult Index()
     {
+        var token = _httpContextAccessor.HttpContext?.Session.GetString("JWToken");
+        ViewBag.IsLoggedIn = !string.IsNullOrEmpty(token);
+
+        // Optionally decode JWT to get role, name, etc.
+        if (ViewBag.IsLoggedIn)
+        {
+            ViewBag.UserRole = JwtHelper.GetClaimValue(token??"", ClaimTypes.Role);
+            ViewBag.UserName = JwtHelper.GetClaimValue(token??"", ClaimTypes.Name) ?? "Candidate";
+        }
         return View();
     }
 

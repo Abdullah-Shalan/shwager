@@ -1,9 +1,59 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
+    var isLoggedIn = (bool)ViewBag.IsLoggedIn;
+    var userName = ViewBag.UserName ?? "to Shwager";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4">Welcome @userName</h1>
+        <p class="lead text-muted">
+            Your Job Onboarding Dashboard
+        </p>
+    </div>
 
+    @if (!isLoggedIn)
+    {
+        <div class="text-center mb-5">
+            <a class="btn btn-primary btn-lg me-2" asp-controller="Auth" asp-action="Login">Login</a>
+            <a class="btn btn-outline-secondary btn-lg" asp-controller="Auth" asp-action="Register">Register</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            <!-- Jobs Card -->
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5 class="card-title">Available Jobs</h5>
+                        <p class="card-text">Explore open job positions and apply.</p>
+                        <a class="btn btn-primary mt-3" asp-controller="Candidate" asp-action="Jobs">View Jobs</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks Card -->
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5 class="card-title">My Tasks</h5>
+                        <p class="card-text">Track your progress on assigned tasks.</p>
+                        <a class="btn btn-warning mt-3" asp-controller="Candidate" asp-action="TaskProgress">View Tasks</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Card -->
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5 class="card-title">Profile</h5>
+                        <p class="card-text">Manage your personal information and resume.</p>
+                        <a class="btn btn-success mt-3" asp-controller="Candidate" asp-action="ViewProfile">View Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -34,7 +34,11 @@ public class AuthController : Controller
 
         if (response.IsSuccessStatusCode)
         {
-            return RedirectToAction("Login", "Auth");
+            return await Login(new LoginRequest
+            {
+                Email = model.Email,
+                Password = model.Password
+            });
         }
 
         ModelState.AddModelError(string.Empty, "Invalid attempt.");

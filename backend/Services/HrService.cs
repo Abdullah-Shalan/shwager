@@ -73,7 +73,7 @@ public class HrService : IHrService
     {
         var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(
             filter: j => j.Id == jobId,
-            includeProperties: "JobTasks");
+            includeProperties: "JobTasks,Candidates");
         if (job == null)
             return false;
 
@@ -81,7 +81,20 @@ public class HrService : IHrService
         {
             foreach (var task in job.JobTasks.ToList())
             {
-                await DeleteJobTaskAsync(task.Id);
+                var cTasks = await _unitOfWork.CandidateTasks.GetAsync(ct => ct.JobTaskId == task.Id);
+                foreach (var ct in cTasks)
+                {
+                    if (ct != null) await _unitOfWork.CandidateTasks.DeleteAsync(ct);
+                }
+                await _unitOfWork.JobTasks.DeleteAsync(task);
+            }
+        }
+        if (job.Candidates != null)
+        {
+            foreach (var candidate in job.Candidates)
+            {
+                candidate.Job = null;
+                await _unitOfWork.Candidates.UpdateAsync(candidate);
             }
         }
 
@@ -150,7 +163,9 @@ public class HrService : IHrService
 
     public async Task<IEnumerable<CandidateProfileDto>?> GetAllCandidatesAsync()
     {
-        var candidates = await _unitOfWork.Candidates.GetAsync();
+        var candidates = await _unitOfWork.Candidates.GetAsync(
+            includeProperties: "Job"
+        );
         var response = new List<CandidateProfileDto>();
 
         if (candidates != null)

@@ -21,6 +21,7 @@ public class HrController : ControllerBase
 
     // ===== Job Management =====
 
+    [AllowAnonymous]
     [HttpGet("jobs")]
     public async Task<ActionResult<IEnumerable<JobSummaryDto>>> GetAvailableJobs()
     {

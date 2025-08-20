@@ -60,7 +60,7 @@ namespace Final_Project.DAL.Migrations
 
                     b.HasIndex("JobId");
 
-                    b.ToTable("Candidates");
+                    b.ToTable("Candidates", (string)null);
                 });
 
             modelBuilder.Entity("Final_Project.Entities.CandidateTask", b =>
@@ -96,7 +96,7 @@ namespace Final_Project.DAL.Migrations
 
                     b.HasIndex("JobTaskId");
 
-                    b.ToTable("CandidateTasks");
+                    b.ToTable("CandidateTasks", (string)null);
                 });
 
             modelBuilder.Entity("Final_Project.Entities.Hr", b =>
@@ -125,7 +125,7 @@ namespace Final_Project.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Hrs");
+                    b.ToTable("Hrs", (string)null);
                 });
 
             modelBuilder.Entity("Final_Project.Entities.Job", b =>
@@ -150,7 +150,7 @@ namespace Final_Project.DAL.Migrations
 
                     b.HasIndex("HrId");
 
-                    b.ToTable("Jobs");
+                    b.ToTable("Jobs", (string)null);
                 });
 
             modelBuilder.Entity("Final_Project.Entities.JobTask", b =>
@@ -181,7 +181,7 @@ namespace Final_Project.DAL.Migrations
 
                     b.HasIndex("JobId");
 
-                    b.ToTable("JobTasks");
+                    b.ToTable("JobTasks", (string)null);
                 });
 
             modelBuilder.Entity("Final_Project.Entities.Candidate", b =>

@@ -1,0 +1,28 @@
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using System.Security.Claims
+@using frontend.Models
+
+@{
+    ViewBag.HrName = JwtHelper.GetClaimValue(HttpContextAccessor.HttpContext?.Session.GetString("JWToken") ?? "",
+    ClaimTypes.Name);
+}
+
+<div class="container-fluid">
+    <div class="navbar-brand fw-bold">
+        @ViewBag.HrName
+    </div>
+
+    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+        <ul class="navbar-nav flex-grow-1">
+            <!-- Jobs -->
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Hr" asp-action="Jobs">Jobs</a>
+            </li>
+          
+            <!-- Candidates -->
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Hr" asp-action="Candidates">Candidates</a>
+            </li>
+        </ul>
+    </div>
+</div>

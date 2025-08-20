@@ -6,7 +6,7 @@ namespace frontend.Models.Requests
         
         public string ForJobTitle { get; set; } = string.Empty;
 
-        public string Description { get; set; } = string.Empty;
+        public string Task { get; set; } = string.Empty;
 
         public bool RequiresFile{ get; set; } = false;
 

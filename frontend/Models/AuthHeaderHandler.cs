@@ -1,3 +1,5 @@
+namespace frontend.Models;
+
 public class AuthHeaderHandler : DelegatingHandler
 {
     private readonly IHttpContextAccessor _httpContextAccessor;

@@ -3,7 +3,16 @@
 @{
     ViewData["Title"] = "Assigned Job";
 }
-
+@if (Model == null || Model.Title == string.Empty)
+{
+    <div class="text-center">
+         <h2 class="mb-4 text-primary">You don't have an assigned job yet.</h2>
+        <p class="mb-4 text-muted">Explore available jobs and get assigned to one.</p>
+        <a class="btn btn-primary btn-lg" asp-controller="Candidate" asp-action="Jobs">View Available Jobs</a>
+    </div>
+}
+else
+{
 <div class="container mt-4">
     <h2 class="mb-4 text-primary">You Are Assigned To This Job</h2>
 
@@ -68,3 +77,4 @@
         <p class="text-muted">No tasks assigned yet.</p>
     }
 </div>
+}

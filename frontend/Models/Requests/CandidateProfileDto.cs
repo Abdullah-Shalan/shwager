@@ -12,6 +12,7 @@ public class CandidateProfileDto
 
     public string ResumeUrl { get; set; } = string.Empty;
 
+    public int? AssignedJobId { get; set; }
     public string AssignedJobTitle { get; set; } = string.Empty;
 
 }

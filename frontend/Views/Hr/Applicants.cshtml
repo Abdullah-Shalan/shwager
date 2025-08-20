@@ -1,0 +1,74 @@
+@model List<frontend.Models.Requests.CandidateProgressDto>
+@{
+    ViewData["Title"] = "Applicants";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Applicants for Job</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">
+            No applicants found for this job.
+        </div>
+    }
+    else
+    {
+        <div class="accordion" id="applicantsAccordion">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var applicant = Model[i];
+                var applicantId = $"applicant{i}";
+                <div class="accordion-item mb-2">
+                    <h2 class="accordion-header" id="heading-@applicantId">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse-@applicantId" aria-expanded="false" aria-controls="collapse-@applicantId">
+                            @applicant.FirstName @applicant.LastName
+                        </button>
+                    </h2>
+                    <div id="collapse-@applicantId" class="accordion-collapse collapse" aria-labelledby="heading-@applicantId"
+                        data-bs-parent="#applicantsAccordion">
+                        <div class="accordion-body">
+                            @if (applicant.TaskProgress == null || !applicant.TaskProgress.Any())
+                            {
+                                <p>No tasks found for this applicant.</p>
+                            }
+                            else
+                            {
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var task in applicant.TaskProgress)
+                                        {
+                                            <tr>
+                                                <td>@task.Description</td>
+                                                @if (task.Status == frontend.Models.Requests.Status.Completed)
+                                                {
+                                                    <td>
+                                                        <span class="badge bg-success">Completed</span>
+                                                        <span class="badge bg-success">@task.CompletedAt</span>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td>
+                                                        <span class="badge bg-warning text-dark">Pending</span>
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

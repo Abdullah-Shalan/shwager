@@ -1,0 +1,117 @@
+@model IEnumerable<frontend.Models.Requests.CandidateProfileDto>
+
+@{
+    ViewData["Title"] = "Candidates";
+    var jobTitles = Model
+        .Where(c => !string.IsNullOrEmpty(c.AssignedJobTitle))
+        .Select(c => c.AssignedJobTitle)
+        .Distinct()
+        .OrderBy(title => title)
+        .ToList();
+}
+
+<h2 class="mb-3">Candidates</h2>
+
+<!-- Filter Dropdown -->
+<div class="mb-4 d-flex align-items-center gap-2">
+    <label for="jobFilter" class="form-label mb-0"><strong>Filter by Job:</strong></label>
+    <select id="jobFilter" class="form-select w-auto">
+        <option value="">All Jobs</option>
+        @foreach (var title in jobTitles)
+        {
+            <option value="@title">@title</option>
+        }
+    </select>
+</div>
+
+<!-- Display Messages as Bootstrap alerts -->
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No candidates found.
+    </div>
+}
+else
+{
+    <div class="row" id="candidateList">
+        @foreach (var candidate in Model)
+        {
+            <div class="col-md-6 mb-4 candidate-card" data-job="@candidate.AssignedJobTitle">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">
+                            @candidate.FirstName @candidate.LastName
+                        </h5>
+                        <h6 class="card-subtitle text-muted mb-3">
+                            @candidate.Email
+                        </h6>
+
+                        <!-- Job Assignment -->
+                        @if (candidate.AssignedJobId != null)
+                        {
+                            <p class="mb-2">
+                               <strong>Assigned Job:</strong> @candidate.AssignedJobTitle
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="text-muted fst-italic mb-2">
+                                Not Assigned
+                            </p>
+                        }
+
+                        <!-- Actions -->
+                        <div class="d-flex gap-2">
+                            <a class="btn btn-sm btn-primary"
+                               asp-action="CandidateProgress"
+                               asp-route-candidateId="@candidate.Id">
+                                Progress
+                            </a>
+                            <a class="btn btn-sm btn-success"
+                               asp-action="DownloadResume"
+                               asp-route-candidateId="@candidate.Id">
+                                Resume
+                            </a>
+                            <a class="btn btn-sm btn-danger"
+                               asp-action="ConfirmDeleteCandidate"
+                               asp-route-candidateId="@candidate.Id">
+                                Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+    <script>
+        document.getElementById("jobFilter").addEventListener("change", function () {
+            const selectedJob = this.value.toLowerCase();
+            const cards = document.querySelectorAll(".candidate-card");
+
+            cards.forEach(card => {
+                const job = (card.getAttribute("data-job") || "").toLowerCase();
+                if (!selectedJob || job === selectedJob) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+    </script>
+}

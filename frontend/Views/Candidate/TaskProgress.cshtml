@@ -4,83 +4,94 @@
     ViewData["Title"] = "Task Progress";
 }
 
-<div class="container mt-4">
-    <div class="row mb-3">
-        <div class="col text-center">
-            <h2 class="fw-bold">Application Progress</h2>
-            <h5 class="text-muted">@ViewBag.JobTitle</h5>
-        </div>
+@if (Model == null || !Model.Any())
+{
+    <div class="text-center">
+        <h2 class="mb-4 text-primary">You don't have an assigned job yet.</h2>
+        <p class="mb-4 text-muted">Explore available jobs and get assigned to one.</p>
+        <a class="btn btn-primary btn-lg" asp-controller="Candidate" asp-action="Jobs">View Available Jobs</a>
     </div>
-
-    @if (TempData["UploadMessage"] != null)
-    {
-        <div class="alert alert-info mt-2" role="alert">
-            @TempData["CompleteTaskMessage"]
+}
+else
+{
+    <div class="container mt-4">
+        <div class="row mb-3">
+            <div class="col text-center">
+                <h2 class="fw-bold">Application Progress</h2>
+                <h5 class="text-muted">@ViewBag.JobTitle</h5>
+            </div>
         </div>
-    }
 
-    <div class="row">
-        <div class="col">
-            @if (Model != null && Model.Any())
-            {
-                <div class="list-group">
-                    @foreach (var task in Model.OrderBy(t => t.Order))
-                    {
-                        <div class="list-group-item list-group-item-action mb-2 shadow-sm rounded">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="mb-1">Task @task.Order</h5>
-                                <span
-                                    class="badge 
-                                @(task.Status == Status.Completed ? "bg-success" : task.Status == Status.InProgress ? "bg-warning text-dark" : "bg-secondary")">
-                                    @task.Status
-                                </span>
-                            </div>
+        @if (TempData["UploadMessage"] != null)
+        {
+            <div class="alert alert-info mt-2" role="alert">
+                @TempData["CompleteTaskMessage"]
+            </div>
+        }
 
-                            <p class="mb-1">@task.Description</p>
-
-                            <div class="small text-muted mb-2">
-                                @if (task.RequiresFile)
-                                {
-                                    <span class="me-2"><i class="bi bi-paperclip"></i> Requires File</span>
-                                }
-                                @if (task.RequiresVerification)
-                                {
-                                    <span class="me-2"><i class="bi bi-shield-check"></i> Requires Verification</span>
-                                }
-                            </div>
-
-                            @if (!string.IsNullOrEmpty(task.FilePath))
-                            {
-                                <div class="mb-2">
-                                    <a href="@task.FilePath" class="btn btn-sm btn-outline-primary" target="_blank">
-                                        View Uploaded File
-                                    </a>
+        <div class="row">
+            <div class="col">
+                @if (Model != null && Model.Any())
+                {
+                    <div class="list-group">
+                        @foreach (var task in Model.OrderBy(t => t.Order))
+                        {
+                            <div class="list-group-item list-group-item-action mb-2 shadow-sm rounded">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-1">Task @task.Order</h5>
+                                    <span
+                                        class="badge 
+                                            @(task.Status == Status.Completed ? "bg-success" : task.Status == Status.InProgress ? "bg-warning text-dark" : "bg-secondary")">
+                                        @task.Status
+                                    </span>
                                 </div>
-                            }
 
-                            @if (!task.CompletedAt.HasValue)
-                            {
-                                <a asp-action="CompleteTask" asp-route-taskId="@task.Id" class="btn btn-sm btn-success mt-2">
-                                    Complete Task
-                                </a>
-                            }
-                            else
-                            {
-                                <p class="mt-2 text-success small">
-                                    Completed at: @task.CompletedAt.Value.ToString("g")
-                                </p>
-                            }
-                        </div>
-                    }
+                                <p class="mb-1">@task.Description</p>
 
-                </div>
-            }
-            else
-            {
-                <div class="alert alert-info text-center">
-                    No tasks found for this job.
-                </div>
-            }
+                                <div class="small text-muted mb-2">
+                                    @if (task.RequiresFile)
+                                    {
+                                        <span class="me-2"><i class="bi bi-paperclip"></i> Requires File</span>
+                                    }
+                                    @if (task.RequiresVerification)
+                                    {
+                                        <span class="me-2"><i class="bi bi-shield-check"></i> Requires Verification</span>
+                                    }
+                                </div>
+
+                                @if (!string.IsNullOrEmpty(task.FilePath))
+                                {
+                                    <div class="mb-2">
+                                        <a href="@task.FilePath" class="btn btn-sm btn-outline-primary" target="_blank">
+                                            View Uploaded File
+                                        </a>
+                                    </div>
+                                }
+
+                                @if (!task.CompletedAt.HasValue)
+                                {
+                                    <a asp-action="CompleteTask" asp-route-taskId="@task.Id" class="btn btn-sm btn-success mt-2">
+                                        Complete Task
+                                    </a>
+                                }
+                                else
+                                {
+                                    <p class="mt-2 text-success small">
+                                        Completed at: @task.CompletedAt.Value.ToString("g")
+                                    </p>
+                                }
+                            </div>
+                        }
+
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info text-center">
+                        No tasks found for this job.
+                    </div>
+                }
+            </div>
         </div>
     </div>
-</div>
+}

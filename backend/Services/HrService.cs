@@ -240,7 +240,7 @@ public class HrService : IHrService
     {
         var candidate = await _unitOfWork.Candidates.GetFirstOrDefaultAsync(
                 filter: c => c.Id == candidateId,
-                includeProperties: "CandidateTasks"
+                includeProperties: "CandidateTasks.JobTask"
         );
 
         if (candidate == null || candidate.CandidateTasks == null)

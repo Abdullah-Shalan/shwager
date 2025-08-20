@@ -3,9 +3,10 @@
 @{
     ViewData["Title"] = "Create Task";
     var jobId = ViewBag.JobId;
+    var jobTitle = ViewBag.jobTitle;
 }
 
-<h2>Create Task for Job @jobId</h2>
+<h2>Create Task for Job : @jobTitle</h2>
 
 <form asp-action="CreateJobTask" method="post">
     <input type="hidden" name="jobId" value="@jobId" />
@@ -27,9 +28,5 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Create Task</button>
-    <a asp-action="JobDetails" asp-route-id="@jobId" class="btn btn-secondary">Cancel</a>
+    <a asp-action="Jobs" asp-route-id="@jobId" class="btn btn-secondary">Cancel</a>
 </form>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

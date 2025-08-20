@@ -1,7 +1,12 @@
+using frontend.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<UnauthorizedRedirectFilter>();
+});
 
 builder.Services.AddHttpContextAccessor();
 
@@ -35,6 +40,7 @@ app.UseSession();
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

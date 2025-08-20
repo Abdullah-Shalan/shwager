@@ -4,29 +4,74 @@
     ViewData["Title"] = "Jobs";
 }
 
-<h2>Jobs</h2>
-<a class="btn btn-primary mb-2" asp-action="CreateJob">Create New Job</a>
+<h2 class="mb-3">Jobs</h2>
+<a class="btn btn-primary mb-4" asp-action="CreateJob">Create New Job</a>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var job in Model)
-        {
-            <tr>
-                <td>@job.Title</td>
-                <td>@job.Description</td>
-                <td>
-                    <a class="btn btn-sm btn-info" asp-action="JobDetails" asp-route-id="@job.Id">Details</a>
-                    <a class="btn btn-sm btn-warning" asp-action="EditJob" asp-route-id="@job.Id">Edit</a>
-                    <a class="btn btn-sm btn-danger" asp-action="DeleteJob" asp-route-id="@job.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<!-- Display Messages as a Bootstrap alert -->
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="row">
+    @foreach (var job in Model)
+    {
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@job.Title</h5>
+                    <p class="card-text">@job.Description</p>
+
+                    <!-- Tasks -->
+                    @if (job.JobTasks != null && job.JobTasks.Any())
+                    {
+                        <h6>Tasks</h6>
+                        <ul class="list-group mb-3">
+                            @foreach (var task in job.JobTasks)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>@task.TaskOrder - @task.Description</strong>
+                                        <div class="mt-1 text-muted small">
+                                            @(task.RequiresVerification ? "🔒 Verification Required " : "")
+                                            @(task.RequiresFile ? "📎 File Upload Required" : "")
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <a class="btn btn-sm btn-light" asp-action="EditTask" asp-route-id="@task.Id">
+                                            Edit
+                                        </a>
+                                        <a class="btn btn-sm btn-light" asp-action="ConfirmDeleteTask" asp-route-id="@task.Id">
+                                            Delete
+                                        </a>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted"><i>No tasks assigned to this job yet.</i></p>
+                    }
+
+
+                    <!-- Actions -->
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-sm btn-primary" asp-action="CreateJobTask" asp-route-jobId="@job.Id" asp-route-jobTitle="@job.Title">Add Task</a>
+                        <a class="btn btn-sm btn-success" asp-action="Applicants" asp-route-jobId="@job.Id">Applicants</a>
+                        <a class="btn btn-sm btn-warning" asp-action="EditJob" asp-route-jobId="@job.Id">Edit</a>
+                        <a class="btn btn-sm btn-danger" asp-action="ConfirmDeleteJob" asp-route-jobId="@job.Id">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

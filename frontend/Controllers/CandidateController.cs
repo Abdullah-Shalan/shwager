@@ -50,7 +50,7 @@ public class CandidateController : Controller
             return RedirectToAction(nameof(AssignedJob));
         }
         TempData["ErrorMessage"] = "Unable to assign to this job. Please try again.";
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(Jobs));
     }
 
     public async Task<IActionResult> TaskProgress()

@@ -2,6 +2,10 @@
 @using System.Security.Claims
 @using frontend.Models
 
+@{
+    var token = HttpContextAccessor.HttpContext?.Session.GetString("JWToken") ?? "";
+}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,10 +23,13 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-white bg-white border-bottom box-shadow mb-3">
             @* Candidate navbar: render only if logged in *@
-            @if (JwtHelper.GetClaimValue(HttpContextAccessor.HttpContext?.Session.GetString("JWToken") ?? "",
-                        ClaimTypes.Role) == "Candidate")
+            @if (JwtHelper.GetClaimValue(token, ClaimTypes.Role) == "Candidate")
             {
                 <partial name="_CandidateNavBar" />
+            }
+            @if (JwtHelper.GetClaimValue(token, ClaimTypes.Role) == "Hr")
+            {
+                <partial name="_HrNavBar" />
             }
             <div class="container-fluid">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
@@ -30,7 +37,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    @if (!string.IsNullOrEmpty(HttpContextAccessor.HttpContext?.Session.GetString("JWToken")))
+                    @if (!string.IsNullOrEmpty(token))
                     {
                         <ul class="nav nav-pills ms-auto">
                             <li class="nav-item">

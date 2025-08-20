@@ -178,6 +178,7 @@ public class HrService : IHrService
                     Email = candidate.Email,
                     FirstName = candidate.FirstName,
                     LastName = candidate.LastName,
+                    AssignedJobId = candidate.JobId,
                     AssignedJobTitle = candidate.Job?.Title ?? "None"
                 });
             }
@@ -228,6 +229,7 @@ public class HrService : IHrService
             Email = candidate.Email,
             FirstName = candidate.FirstName,
             LastName = candidate.LastName,
+            AssignedJobId = candidate.JobId,
             AssignedJobTitle = AssignedJobTitle
         };
 
